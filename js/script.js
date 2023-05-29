@@ -123,11 +123,16 @@ async function openModal(id) {
 					? `<li class="modal__movie-runtime">Время - ${respData.filmLength} мин.</li>`
 					: ""
 			}
-            <li>Сайт: <a href="${
+            <li>Официальный сайт: <a href="${
 				respData.webUrl
 			}" target="_blank" class="modal__movie-site">${
 		respData.webUrl
 	}</a></li>
+            <li>Смотреть бесплатно: <a href="https://1ww.frkp.live/film/${
+				respData.kinopoiskId
+			}/" target="_blank" class="modal__movie-site">https://1ww.frkp.live/film/${
+		respData.kinopoiskId
+	}/</a></li>
             <li class="modal__movie-overview">Описание: ${
 				respData.description
 			}</li>
@@ -141,8 +146,7 @@ async function openModal(id) {
 
 function closeModal() {
 	modalEl.classList.remove("modal--show");
-    document.body.classList.remove("stop-scrolling");
-
+	document.body.classList.remove("stop-scrolling");
 }
 
 window.addEventListener("click", (e) => {
