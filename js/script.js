@@ -1,15 +1,16 @@
 const API_KEY = "3794e382-315b-4c4f-922c-b1e85f974331";
 const API_URL_POPULAR =
-	"https://kinopoiskapiunofficial.tech/api/v2.2/films/top?type=TOP_100_POPULAR_FILMS&page=1";
+	"https://kinopoiskapiunofficial.tech/api/v2.2/films/top?type=TOP_100_POPULAR_FILMS&page=";
 const API_URL_SEARCH =
 	"https://kinopoiskapiunofficial.tech/api/v2.1/films/search-by-keyword?keyword=";
 const API_URL_MOVIE_DETAILS =
 	"https://kinopoiskapiunofficial.tech/api/v2.2/films/";
 
-getMovies(API_URL_POPULAR);
+getMovies(API_URL_POPULAR, 1);
+pagination();
 
-async function getMovies(url) {
-	const resp = await fetch(url, {
+async function getMovies(url, page) {
+	const resp = await fetch(url + page, {
 		headers: {
 			"Content-Type": "application/json",
 			"X-API-KEY": API_KEY,
@@ -91,7 +92,7 @@ form.addEventListener("submit", (e) => {
 	}
 });
 
-// Modal
+// Modal ----------------------------------------------------------------------------------------------------------------------
 const modalEl = document.querySelector(".modal");
 
 async function openModal(id) {
@@ -121,7 +122,7 @@ async function openModal(id) {
             ${
 				respData.filmLength
 					? `<li class="modal__movie-runtime">Время - ${respData.filmLength} мин.</li>`
-					: ""
+					: `<li class="modal__movie-runtime">Время - не указано</li>`
 			}
             <li>Официальный сайт: <a href="${
 				respData.webUrl
@@ -160,3 +161,58 @@ window.addEventListener("keydown", (e) => {
 		closeModal();
 	}
 });
+
+// Pagination ----------------------------------------------------------------------------------------------------------------------
+
+function pagination() {
+	let currentPage = 1;
+
+	function displayPagination() {
+		const paginationEl = document.querySelector(".pagination");
+		const pagesCount = 5;
+		const ulEl = document.createElement("ul");
+		ulEl.classList.add("pagination__list");
+
+		for (let i = 0; i < pagesCount; i++) {
+			const liEl = displayPaginationBtn(i + 1);
+			ulEl.appendChild(liEl);
+		}
+
+		paginationEl.appendChild(ulEl);
+	}
+
+	function displayPaginationBtn(pageNum) {
+		const liEl = document.createElement("li");
+		liEl.classList.add("pagination__item");
+		liEl.innerText = pageNum;
+
+		if (currentPage == pageNum)
+			liEl.classList.add("pagination__item--active");
+		liEl.addEventListener("click", () => {
+			currentPage = pageNum;
+			liEl.classList.add(".pagination__item--active");
+			getMovies(API_URL_POPULAR, currentPage);
+
+			let currentItemLi = document.querySelector(
+				"li.pagination__item--active"
+			);
+			currentItemLi.classList.remove("pagination__item--active");
+
+			liEl.classList.add("pagination__item--active");
+		});
+		return liEl;
+	}
+
+	displayPagination();
+}
+
+
+// SCROLL
+const topScroll = document.querySelector(".top-scroll")
+topScroll.addEventListener("click", () => {
+    window.scrollTo(0,0)
+})
+const bottomScroll = document.querySelector(".bottom-scroll")
+bottomScroll.addEventListener("click", () => {
+    window.scrollTo(0, document.body.scrollHeight)
+})
