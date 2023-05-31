@@ -10,14 +10,26 @@ getMovies(API_URL_POPULAR, 1);
 pagination();
 
 async function getMovies(url, page) {
-	const resp = await fetch(url + page, {
-		headers: {
-			"Content-Type": "application/json",
-			"X-API-KEY": API_KEY,
-		},
-	});
-	const respData = await resp.json();
-	showMovies(respData);
+    if(url === API_URL_POPULAR) {
+        const resp = await fetch(url + page, {
+            headers: {
+                "Content-Type": "application/json",
+                "X-API-KEY": API_KEY,
+            },
+        });
+        const respData = await resp.json();
+		showMovies(respData);
+    } else {
+        const resp = await fetch(url, {
+			headers: {
+				"Content-Type": "application/json",
+				"X-API-KEY": API_KEY,
+			},
+		});
+        const respData = await resp.json();
+		showMovies(respData);
+    }
+	
 }
 
 function getClassByRate(vote) {
